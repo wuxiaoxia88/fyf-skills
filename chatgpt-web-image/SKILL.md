@@ -41,11 +41,11 @@ Preferred launch command on macOS:
 
 1. Run `scripts/probe_chatgpt.js` first to verify login state and current selectors.
 2. If probe passes, run `scripts/run_generate_image.js "<prompt>"`.
-3. Prefer native download flow:
+3. Prefer direct image save flow:
    - generate image
-   - click "分享此图片"
-   - click dialog "下载"
-   - capture download via CDP
+   - locate latest generated image element
+   - fetch the real image source from page context (equivalent to right-click → Save Image As)
+   - write the file into the default Downloads folder or configured output directory
 4. Return the final local file path.
 
 ## Current confirmed selectors/state
@@ -74,8 +74,9 @@ Validated during live testing on macOS + local Chrome 147 + ChatGPT Chinese UI.
   - clicking the share button via DOM `element.click()` was more reliable than simulated coordinate clicks in repeated-image layouts
   - clicking the dialog download button via DOM `element.click()` was also more reliable than coordinate clicks
 - Download path:
-  - native CDP download interception works with `Browser.setDownloadBehavior`
-  - observed download source was a `blob:https://chatgpt.com/...` URL and Chrome emitted `Browser.downloadWillBegin` / `Browser.downloadProgress`
+  - v1 now prefers direct page-side image fetch from the generated image `src`
+  - this behaves like right-click → Save Image As, but is automated inside the page context
+  - default output directory is `~/Downloads` unless overridden by `CHATGPT_IMAGE_OUTPUT_DIR`
 
 ## Files
 

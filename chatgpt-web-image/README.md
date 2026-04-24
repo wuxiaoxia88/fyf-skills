@@ -9,8 +9,9 @@
 - 进入“生成图片”模式
 - 提交 prompt 进行生图
 - 等待图片生成完成
-- 通过“分享此图片 -> 下载”拿到原始图片文件
-- 使用 CDP 下载事件捕获真实本地文件路径
+- 直接从已生成图片元素读取真实图片地址
+- 在 ChatGPT 页面上下文内取回图片数据（等价于“图片存储为”）
+- 将图片直接保存到默认下载文件夹，并返回真实本地文件路径
 
 ## 目录结构
 
@@ -108,7 +109,7 @@ node ./chatgpt-web-image/scripts/run_generate_image.js "Generate a simple red ap
 默认输出目录：
 
 ```text
-~/.chatgpt-image-skill-output
+~/Downloads
 ```
 
 生成成功后，脚本会返回类似结果：

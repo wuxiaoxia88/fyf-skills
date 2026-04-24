@@ -40,8 +40,8 @@ Observed visible actions inside share dialog:
 - `Reddit`
 - `下载`
 
-## Preferred download path
+## Preferred save path
 1. Generate image
-2. Click `分享此图片`
-3. Click dialog button with text `下载`
-4. Capture file through CDP download events
+2. Locate the newest generated image element
+3. Use the image element `src` inside the ChatGPT page context to fetch binary data with existing browser credentials
+4. Save the file directly to the configured output directory (default: `~/Downloads`)

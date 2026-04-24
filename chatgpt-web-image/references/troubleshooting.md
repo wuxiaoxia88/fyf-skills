@@ -30,14 +30,20 @@ Action:
 - click the image first
 - inspect current image toolbar selectors
 
-## Download event never fires
+## Image fetch/save fails
 Possible causes:
-- Browser.setDownloadBehavior not configured
-- dialog button was not the real download button
-- popup/dialog changed
+- generated image `src` was not found
+- page-context fetch returned an auth or network error
+- the output directory is not writable
 Action:
-- inspect visible dialog buttons
-- retry after reopening the share dialog
+- inspect the latest generated image selector
+- verify the image `src` still contains `/backend-api/estuary/content?id=file_`
+- retry once in the same logged-in session
+- verify the configured output directory exists and is writable
+
+## Share dialog/blob download path is confusing
+The previous implementation relied on the share dialog's `下载` action, which could surface a `blob:` URL and make debugging confusing.
+The current v1 prefers a more direct path: read the generated image `src`, fetch it in page context with browser credentials, and save the binary locally.
 
 ## Multiple generated images
 v1 should prefer the newest visible generated image with the largest dimensions.
