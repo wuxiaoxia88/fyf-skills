@@ -12,6 +12,7 @@
 - 直接从已生成图片元素读取真实图片地址
 - 在 ChatGPT 页面上下文内取回图片数据（等价于“图片存储为”）
 - 将图片直接保存到默认下载文件夹，并返回真实本地文件路径
+- 输出文件名自动使用日期+时间格式，避免文件名过长或包含 prompt 文本
 
 ## 目录结构
 
@@ -110,6 +111,18 @@ node ./chatgpt-web-image/scripts/run_generate_image.js "Generate a simple red ap
 
 ```text
 ~/Downloads
+```
+
+默认文件名格式：
+
+```text
+chatgpt_image_YYYYMMDD_HHMMSS.png
+```
+
+例如：
+
+```text
+chatgpt_image_20260423_181529.png
 ```
 
 生成成功后，脚本会返回类似结果：

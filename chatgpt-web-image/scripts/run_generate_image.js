@@ -9,12 +9,9 @@ if (!prompt) {
   process.exit(1);
 }
 
-function safeName(name) {
-  return (name || 'chatgpt_image')
-    .replace(/[\\/:*?"<>|]+/g, '_')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, 80) || 'chatgpt_image';
+function formatTimestamp(date = new Date()) {
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}_${pad(date.getHours())}${pad(date.getMinutes())}${pad(date.getSeconds())}`;
 }
 
 (async () => {
@@ -160,8 +157,7 @@ function safeName(name) {
     let ext = 'png';
     if (/jpeg|jpg/i.test(fetched.mime)) ext = 'jpg';
     else if (/webp/i.test(fetched.mime)) ext = 'webp';
-    const baseName = safeName(fetched.alt || prompt);
-    const outputPath = path.join(config.outputDir, `${baseName}.${ext}`);
+    const outputPath = path.join(config.outputDir, `chatgpt_image_${formatTimestamp()}.${ext}`);
     fs.writeFileSync(outputPath, Buffer.from(fetched.bytes));
 
     console.log(JSON.stringify({
