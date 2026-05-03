@@ -1,0 +1,25 @@
+{
+  "name": "gemini-picture",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "generate.mjs",
+  "scripts": {
+    "generate": "node generate.mjs",
+    "daemon": "node src/daemon/server.js"
+  },
+  "keywords": [
+    "openclaw-skill",
+    "gemini",
+    "image-generation",
+    "browser-automation"
+  ],
+  "license": "ISC",
+  "description": "OpenClaw skill for batch image generation through the Gemini browser UI.",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "puppeteer-core": "^24.39.1",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "sharp": "^0.34.5"
+  }
+}
