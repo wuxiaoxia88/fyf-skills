@@ -101,6 +101,25 @@ async function preflightCheck(ops) {
   return { ok: true };
 }
 
+/**
+ * 关闭本次用于生图的 Gemini 标签页。
+ *
+ * 只关闭 page，不关闭浏览器本体；浏览器仍由 Daemon 守护。
+ * 这样每次任务生成并保存图片后不会留下 Gemini 生图页面。
+ *
+ * @param {import('puppeteer-core').Page | undefined} page
+ */
+async function closeGenerationPage(page) {
+  if (!page) return;
+  try {
+    if (page.isClosed()) return;
+    await page.close({ runBeforeUnload: false });
+    console.error('[browser] 已关闭本次 Gemini 生图标签页');
+  } catch (err) {
+    console.error('[browser] ⚠️ 关闭 Gemini 生图标签页失败:', err.message);
+  }
+}
+
 async function main() {
   if (!PROMPTS_FILE) {
     console.error('用法: node generate.mjs <prompts.json> [输出目录]');
@@ -122,8 +141,12 @@ async function main() {
   console.error(`[gemini-picture] 输出目录: ${OUTPUT_DIR}`);
   console.error(`[gemini-picture] 共 ${prompts.length} 张图\n`);
 
-  const { ops } = await createGeminiSession();
-  process.on('SIGINT', () => { disconnect(); process.exit(0); });
+  const { ops, page } = await createGeminiSession();
+  process.on('SIGINT', async () => {
+    await closeGenerationPage(page);
+    disconnect();
+    process.exit(0);
+  });
 
   // ─── 预检：CDP + 页面基础可用性 ───
   const pf = await preflightCheck(ops);
@@ -137,6 +160,7 @@ async function main() {
       images: [],
       error: `preflight_failed: ${pf.error}`,
     }));
+    await closeGenerationPage(page);
     disconnect();
     process.exit(1);
   }
@@ -212,6 +236,7 @@ async function main() {
     }));
 
   } finally {
+    await closeGenerationPage(page);
     disconnect();
   }
 }
